@@ -1,51 +1,50 @@
 <template>
 <div class="admin">
-  <h1>The Admin Page!</h1>
-    <div class="heading">
-      <div class="circle">1</div>
-      <h2>Add an Item</h2>
+  <h1>Follow the steps to add your recipes</h1>
+  <div class="heading">
+    <div class="circle">1</div>
+    <h2>Add Your Recipes</h2>
+  </div>
+  <div class="add">
+    <div class="form">
+      <input v-model="title" placeholder="Name of the Recipe">
+      <div class="ingredients_box"><textarea rows="2" cols="60" v-model="ingredients" placeholder="Ingredients of the Recipe"></textarea></div>
+      <div class="description_box"><textarea rows="9" cols="60" v-model="description" placeholder="Steps of the Recipe"></textarea></div>
+      <p></p>
+      <input type="file" name="photo" @change="fileChanged">
+      <button @click="upload">Upload</button>
     </div>
-    <div class="add">
-      <div class="form">
-        <input v-model="title" placeholder="Title">
-        <div><textarea v-model="description" placeholder="Description of Item"></textarea></div>
-        <p></p>
-        <input type="file" name="photo" @change="fileChanged">
-        <button @click="upload">Upload</button>
-      </div>
-      <div class="upload" v-if="addItem">
-        <h2>{{addItem.title}}</h2>
-        <p>{{addItem.description}}</p>
-        <img :src="addItem.path" />
+    <div class="upload" v-if="addItem">
+      <h2>{{addItem.title}}</h2>
+      <p>{{addItem.ingredients}}</p>
+      <p>{{addItem.description}}</p>
+      <img :src="addItem.path" />
+    </div>
+  </div>
+  <div class="heading">
+    <div class="circle">2</div>
+    <h2>Edit/Delete an Item</h2>
+  </div>
+  <div class="edit">
+    <div class="form">
+      <input v-model="findTitle" placeholder="Search">
+      <div class="suggestions" v-if="suggestions.length > 0">
+        <div class="suggestion" v-for="s in suggestions" :key="s.id" @click="selectItem(s)">{{s.title}}
+        </div>
       </div>
     </div>
-    <div class="heading">
-     <div class="circle">2</div>
-     <h2>Edit/Delete an Item</h2>
-   </div>
-   <div class="edit">
-     <div class="form">
-       <input v-model="findTitle" placeholder="Search">
-       <div class="suggestions" v-if="suggestions.length > 0">
-         <div class="suggestion" v-for="s in suggestions" :key="s.id" @click="selectItem(s)">{{s.title}}
-         </div>
-       </div>
-     </div>
-     <div class="upload" v-if="findItem">
-       <input v-model="findItem.title"><br>
-       <textarea v-model="findItem.description"></textarea>
-       <p></p>
-       <img :src="findItem.path" />
-     </div>
-     <div class="actions" v-if="findItem">
-       <button @click="deleteItem(findItem)">Delete</button>
-       <button @click="editItem(findItem)">Edit</button>
-     </div>
-   </div>
-   <footer>
-     <p>my git hub: <a href="https://github.com/BYU-CS-260-Winter-2020/lab-4-museum-of-ordinary-objects-spark58.git">
-     link</a>.</p>
-   </footer>
+    <div class="upload" v-if="findItem">
+      <input v-model="findItem.title"><br>
+      <textarea rows="9" cols="60" v-model="findItem.ingredients"></textarea><br>
+      <textarea rows="9" cols="60" v-model="findItem.description"></textarea>
+      <p></p>
+      <img :src="findItem.path" />
+    </div>
+    <div class="actions" v-if="findItem">
+      <button @click="deleteItem(findItem)">Delete</button>
+      <button @click="editItem(findItem)">Edit</button>
+    </div>
+  </div>
 </div>
 </template>
 
@@ -54,30 +53,31 @@ import axios from 'axios';
 export default {
   name: 'Admin',
   data() {
-   return {
-     title: "",
-     description: "",
-     file: null,
-     addItem: null,
-     items: [],
-     findTitle: "",
-     findItem: null,
-   }
- },
- computed: {
-  suggestions() {
-    let items = this.items.filter(item => item.title.toLowerCase().startsWith(this.findTitle.toLowerCase()));
-    return items.sort((a, b) => a.title > b.title);
-  }
-},
- created() {
-   this.getItems();
- },
- methods: {
-   fileChanged(event) {
-     this.file = event.target.files[0]
-   },
-   async upload() {
+    return {
+      title: "",
+      description: "",
+      ingredients: "",
+      file: null,
+      addItem: null,
+      items: [],
+      findTitle: "",
+      findItem: null,
+    }
+  },
+  computed: {
+    suggestions() {
+      let items = this.items.filter(item => item.title.toLowerCase().startsWith(this.findTitle.toLowerCase()));
+      return items.sort((a, b) => a.title > b.title);
+    }
+  },
+  created() {
+    this.getItems();
+  },
+  methods: {
+    fileChanged(event) {
+      this.file = event.target.files[0]
+    },
+    async upload() {
       try {
         const formData = new FormData();
         formData.append('photo', this.file, this.file.name)
@@ -85,6 +85,7 @@ export default {
         let r2 = await axios.post('/api/items', {
           title: this.title,
           description: this.description,
+          ingredients: this.ingredients,
           path: r1.data.path
         });
         this.addItem = r2.data;
@@ -102,10 +103,10 @@ export default {
       }
     },
     selectItem(item) {
-     this.findTitle = "";
-     this.findItem = item;
-   },
-   async deleteItem(item) {
+      this.findTitle = "";
+      this.findItem = item;
+    },
+    async deleteItem(item) {
       try {
         await axios.delete("/api/items/" + item._id);
         this.findItem = null;
@@ -116,18 +117,20 @@ export default {
       }
     },
     async editItem(item) {
-     try {
-       await axios.put("/api/items/" + item._id, {
-         title: this.findItem.title, description: this.findItem.description,
-       });
-       this.findItem = null;
-       this.getItems();
-       return true;
-     } catch (error) {
-       console.log(error);
-     }
-   },
- }
+      try {
+        await axios.put("/api/items/" + item._id, {
+          title: this.findItem.title,
+          description: this.findItem.description,
+          ingredients: this.findItem.ingredients,
+        });
+        this.findItem = null;
+        this.getItems();
+        return true;
+      } catch (error) {
+        console.log(error);
+      }
+    },
+  }
 }
 </script>
 
@@ -152,6 +155,7 @@ export default {
 .edit {
   display: flex;
 }
+
 
 .circle {
   border-radius: 50%;
