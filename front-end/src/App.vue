@@ -1,20 +1,24 @@
 <template>
 <div id="app">
   <div class="header">
-    <router-link to="/">
-      <div class="logo">
-        <img src="/ordinary.png">
+    <router-link class="link" to="/">
+      <div class="title">
+        <img src="/ordinary.png" width=30%>
+        <hr>
+        <h1>Recipe Book</h1>
       </div>
     </router-link>
-    <div class="title">
-      <h1>Museum of Ordinary Objects</h1>
-    </div>
   </div>
   <div class="content">
+    <div class="menu">
+      <router-link class="link" to="/yourrecipe">My Recipes </router-link>|
+      <router-link class="link" to="/admin">Add New </router-link>
+    </div>
     <router-view />
   </div>
   <div class="footer">
-    <router-link to="/admin">Admin</router-link>
+    <p>my git hub: <a href="https://github.com/spark58/cp4.git">
+        link</a>.</p>
   </div>
 </div>
 </template>
@@ -22,6 +26,12 @@
 <style>
 html {
   box-sizing: border-box;
+}
+
+.menu {
+  color: #17202A;
+  font-weight: bold;
+  font-size: 20px;
 }
 
 body {
@@ -35,13 +45,23 @@ body {
 /* Header */
 .header {
   display: flex;
+  align-items: center;
+  justify-content: center;
   padding: 10px 100px 0px 100px;
-  background-color: #5BDEFF;
-  color: #1C454F;
+  background-color: #F1BBB0;
+  color: #17202A;
+}
+
+.logo {
+  align-items: center;
+  justify-content: center;
 }
 
 .title {
   margin-top: 5px;
+  text-decoration: none;
+  text-align: center;
+  color: #17202A;
 }
 
 .title h1 {
@@ -61,12 +81,18 @@ body {
   font-size: 12px;
 }
 
+.link {
+  text-decoration: none;
+  color: #DC5132;
+}
+
 .footer a {
   color: #000;
 }
 
 h1 {
-  font-size: 20px;
+  font-size: 15px;
+  color: #17202A;
 }
 
 h2 {
