@@ -19,6 +19,7 @@
   <div class="footer">
     <p>my git hub: <a href="https://github.com/spark58/cp4.git">
         link</a>.</p>
+        <p> Pair Programming: Sihnyoung Park and Danni Figueroa </p>
   </div>
 </div>
 </template>
