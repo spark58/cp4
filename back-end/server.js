@@ -19,7 +19,7 @@ const multer = require('multer')
 const upload = multer({
   dest: '../front-end/public/images/',
   limits: {
-    fileSize: 10000000
+    fileSize: 100000000000000
   }
 });
 
@@ -28,6 +28,7 @@ const itemSchema = new mongoose.Schema({
   title: String,
   path: String,
   description: String,
+  ingredients: String,
 });
 
 // Create a model for items in the museum.
@@ -51,6 +52,7 @@ app.post('/api/items', async (req, res) => {
     title: req.body.title,
     path: req.body.path,
     description: req.body.description,
+    ingredients: req.body.ingredients,
   });
   try {
     await item.save();
@@ -91,6 +93,7 @@ app.put('/api/items/:id', async (req, res) => {
     });
     item.title = req.body.title;
     item.description = req.body.description;
+    item.ingredients = req.body.ingredients;
     item.save();
     //res.send(item);
     res.sendStatus(200);
