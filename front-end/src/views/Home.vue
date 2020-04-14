@@ -1,47 +1,26 @@
 <template>
-  <div class="home">
-    <section class="image-gallery">
-      <div class="image" v-for="item in items" :key="item.id">
-        <h2>{{item.title}}</h2>
-        <p>{{item.description}}</p>
-        <img :src="item.path" />
-      </div>
-    </section>
-    <footer>
-      <p>my git hub: <a href="https://github.com/BYU-CS-260-Winter-2020/lab-4-museum-of-ordinary-objects-spark58.git">
-      link</a>.</p>
-    </footer>
+<div class="home">
+  <div class="description">
+    <h1 class="header_desc"> Welcome!</h1>
+    <p> Ever wanted to keep track of your recipes online?! <br><br>
+      Now you can! with Yummy Food Recipe Book</p>
+    <img src="/cook1.jpg" width=40%>
   </div>
+</div>
 </template>
 
-<script>
-// @ is an alias to /src
-import axios from 'axios';
-export default {
-  name: 'Home',
-  data() {
-  return {
-   items: [],
-  }
-},
-created() {
-  this.getItems();
-},
-methods: {
-  async getItems() {
-    try {
-      let response = await axios.get("/api/items");
-      this.items = response.data;
-      return true;
-    } catch (error) {
-      console.log(error);
-    }
-  },
-}
-}
-</script>
-
 <style scoped>
+.description {
+  text-align: center;
+  font-family: 'Comic Neue', cursive;
+  font-size: 22px;
+}
+
+.header_desc {
+  font-family: 'Comic Neue', cursive;
+  font-size: 28px;
+}
+
 .image h2 {
   font-style: italic;
 }
